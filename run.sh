@@ -1,1 +1,1 @@
-docker start -it niosr_project
+docker start -i niosr_project
