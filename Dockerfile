@@ -1,3 +1,8 @@
 FROM ros:humble
 
-RUN apt-get update && apt-get -y upgrade && apt-get -y install ros-humble-desktop
+WORKDIR /root/niosr
+RUN ls /root/niosr
+
+RUN apt-get update && apt-get -y upgrade && apt-get -y install ros-humble-desktop \
+    git \
+    vim \
