@@ -16,20 +16,36 @@
 
 import rclpy
 from rclpy.node import Node
-try:
-    from robot_control.robot_control import RobotControl
-except ImportError:
-    from robot_control import RobotControl
+from geometry_msgs.msg import Point
+from geometry_msgs.msg import Twist
+
 
 
 class RobotControlNode(Node):
 
     def __init__(self):
         super().__init__('robot_control_node')
-        self.robot_control = RobotControl()
-        self.param_name = self.declare_parameter('param_name', 456).value
-        self.robot_control.foo(self.param_name)
+        self.subscription = self.create_subscription(Point,'point', self.listener_callback, 10)
+        self.subscription
+        self.publisher = self.create_publisher(Twist, '/cmd_vel', 1)
 
+    def listener_callback(self, point):
+        self.get_logger().info(f'x: "{point.x}" y: "{point.y}"')
+        velocity_msg = Twist()
+        if (point.y < 150):
+            velocity_msg.linear.x = 0.5
+        elif (point.y > 300):
+            velocity_msg.linear.x = -0.5
+        else:  
+            velocity_msg.linear.x = 0.0
+        if(point.x > 400):
+            velocity_msg.angular.z = -0.5
+        elif(point.x < 200):
+            velocity_msg.angular.z = 0.5
+        else:
+            velocity_msg.angular.z = 0.0
+        self.publisher.publish(velocity_msg)
+        
 
 def main(args=None):
     rclpy.init(args=args)
