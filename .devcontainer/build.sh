@@ -1,2 +1,1 @@
-docker build --network=host \
--t niosr_project .
+docker build -t niosr_project .
